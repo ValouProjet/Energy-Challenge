@@ -16,7 +16,7 @@ df['Date'] = df['DATETIME'].dt.date
 # Groupez les données par heure et calculez la moyenne pour chaque heure
 result = df.groupby(['Date', 'Hour'])['P'].mean().reset_index()
 
-# Affichez le résultat
+# Affichez le résultat avec les colonnes
 print(result)
 
 # Enregistrez le résultat dans un nouveau fichier CSV si nécessaire
