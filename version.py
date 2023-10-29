@@ -47,7 +47,32 @@ def temperature_tri() :
             day += 1
     return Temp
 
-
+def puissance_monitoring(batiment):
+    
+    # Chargez le fichier CSV
+    csv_file = "C:\\Users\\Romain\\Desktop\\Master 1\\Energy challenge\\donnee_energie\\" + batiment  # Remplacez par le chemin de votre fichier CSV
+    # Spécifiez le séparateur de décimal comme une virgule
+    df = pd.read_csv(csv_file, parse_dates=['DATETIME'], delimiter=';', decimal=',')
+    
+    
+    # Assurez-vous que les dates sont triées dans l'ordre croissant
+    df = df.sort_values(by='DATETIME')
+    
+    # Créez une colonne d'heure
+    df['Hour'] = df['DATETIME'].dt.hour
+    
+    # Créez une colonne de date
+    df['Date'] = df['DATETIME'].dt.date
+    
+    # Groupez les données par heure et calculez la puissance moyenne pour chaque heure
+    power_df = df.groupby(['Date', 'Hour'])['P'].mean().reset_index()
+    
+    # Affichez le résultat
+    print(power_df)
+    
+    # Supposons que 'result' soit le DataFrame contenant les puissances moyennes
+    puissances_moyennes = power_df['P'].values
+    return puissances_moyennes
 
 
 # Chargez le fichier CSV
