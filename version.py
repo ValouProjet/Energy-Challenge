@@ -4,6 +4,16 @@ import numpy as np
 import sys
 from datetime import datetime
 
+def generate_numbers_as_strings(n):
+    
+    numbers_as_strings = []
+
+    for i in range(1, n + 1):
+        number_string = str(i).zfill(2)
+        numbers_as_strings.append(number_string)
+
+    return numbers_as_strings
+
 def temperature_tri() :
     lien_fichier_excel = "C:\\Users\\Romain\\Desktop\\Master 1\\Energy challenge\\Signature_Thermique\\Building_Data_Template_Polytech.xlsx"
     meteo = pd.read_excel(io=lien_fichier_excel, sheet_name='Meteo')
@@ -74,25 +84,84 @@ def puissance_monitoring(batiment):
     puissances_moyennes = power_df['P'].values
     return puissances_moyennes
 
+Temp = temperature_tri()
+print('on a les 8760 températures ')
+# Les indices triés des températures (du plus froid au plus chaud)
+indices_tries = np.argsort(Temp)
+temperatures_triees = Temp[indices_tries]
 
-# Chargez le fichier CSV
-csv_file = "C:\\Users\\Romain\\Desktop\\Master 1\\Energy challenge\\donnee_energie\\B48_c.csv"  # Remplacez par le chemin de votre fichier CSV
-df = pd.read_csv(csv_file, parse_dates=['DATETIME'], delimiter=';')
+compteur_base = [ 'B28_CHA_CC.csv','B49_47_CHA_CC.csv','B52_CHA_CC.csv','B52_CHA_RC_BUR.csv','B52_CHA_RC_HALL.csv','B52_c.csv','B37_c.csv','B53_c.csv','B48_c.csv']
+for i in range(9) : 
 
-# Assurez-vous que les dates sont triées dans l'ordre croissant
-df = df.sort_values(by='DATETIME')
+    puissances_moyennes = puissance_monitoring(compteur_base[i])
+    print('on a les x puissances ')
+    
+    #-----------------------------------------------------------------------------------
+    #PROBL7ME A REGLER
+    #imposer le vecteur puissance à 8760
+    taille = len(puissances_moyennes)
+    nombre_heure = range(1, taille+1)
+    solution_de_secours = np.zeros(8760)
+    for l in range(taille):
+        if(puissances_moyennes[l] <0):
+            puissances_moyennes[l] = 0
+        solution_de_secours[l]= puissances_moyennes[l]
+    # Les indices triés des puisssances de la plus grande à la plus petite
+    indices_tries_2 = np.argsort(solution_de_secours)[::-1]
+    puissances_triees = solution_de_secours[indices_tries_2]
+    #------------------------------------------------------------------------------------
 
-# Créez une colonne d'heure
-df['Hour'] = df['DATETIME'].dt.hour
+    
+    # Les indices triés des puisssances de la plus grande à la plus petite
+    #indices_tries_2 = np.argsort(puissances_moyennes)[::-1]
+    #puissances_triees = puissances_moyennes[indices_tries_2]
+    
+    building = compteur_base[i]
+    if (compteur_base[i] == 'B28_CHA_CC.csv'):
+        building = 'B28'
+    if (compteur_base[i] == 'B49_47_CHA_CC.csv'):
+        building = 'B49_1'
+    #---------------------------------------------------------------------------------------------------------
+    if (compteur_base[i] == 'B52_CHA_CC.csv'):
+        building = 'B52_9'
+        #ici on devrait soustraire les compteur B52_CHA_RC_BUR,B52_CHA_RC_HALL,B52_c du compteur B52_CHA_CC
+    #----------------------------------------------------------------------------------------------------------
+    if (compteur_base[i] == 'B52_CHA_RC_BUR.csv'):
+        building = 'B52_3'
+    if (compteur_base[i] == 'B52_CHA_RC_HALL.csv'):
+        building = 'B52_6_7_8'
+    if (compteur_base[i] == 'B52_c.csv'):
+        building = 'B52_4'
+    if (compteur_base[i] == 'B37_c.csv'):
+        building = 'B37'
+    if (compteur_base[i] == 'B53_c.csv'):
+        building = 'B53'
+    if (compteur_base[i] == 'B48_c.csv'):
+        building = 'B48'
+    
+    # Créez un graphique de la puissance moyenne en fonction de la température
+    plt.plot(nombre_heure, puissances_moyennes, color='orangered')
+    plt.title(f"Thermal signature of {building}")
+    plt.ylabel("Mean power per hour(kW) [kW]")
+    plt.grid(True, alpha=0.3)
+    mois = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    plt.fill_between(nombre_heure, puissances_moyennes, where=puissances_moyennes>0, alpha=0.7, color='tomato')  
+    plt.xlabel('Heure')
+    # Spécifiez l'emplacement et le nom du fichier
+    #file_path = "C:\\Users\\Romain\\Desktop\\Master 1\\Energy challenge\\Signature_Thermique\\load profile monitoring\\building_a"+building
+    # Enregistrez le graphique dans le fichier spécifié
+    #plt.savefig(file_path)
+    plt.show()
+    
+    plt.figure(figsize=(10, 6))
+    plt.scatter(temperatures_triees,puissances_triees, alpha=0.5)
+    plt.xlabel('Temperature (°C)')
+    plt.ylabel('Mean power per hour(kW)')
+    plt.title(f"Puissance Moyenne par heure en fonction de la Température du {building}")
+    plt.grid(True)
+    # Spécifiez l'emplacement et le nom du fichier
+    #file_path = "C:\\Users\\Romain\\Desktop\\Master 1\\Energy challenge\\Signature_Thermique\\load profile monitoring\\building_b"+building
 
-# Créez une colonne de date
-df['Date'] = df['DATETIME'].dt.date
-
-# Groupez les données par heure et calculez la moyenne pour chaque heure
-result = df.groupby(['Date', 'Hour'])['P'].mean().reset_index()
-
-# Affichez le résultat avec les colonnes
-print(result)
-
-# Enregistrez le résultat dans un nouveau fichier CSV si nécessaire
-result.to_csv('resultat.csv', index=False)
+    # Enregistrez le graphique dans le fichier spécifié
+    #plt.savefig(file_path)
+    plt.show()
