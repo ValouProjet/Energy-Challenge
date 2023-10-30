@@ -52,7 +52,3 @@ defined just above.
 This function creates a table going from 1 to n by putting a 0 in front of the figures (01 instead of 1, 02 instead of 2...).
 In the Excel files provided by the university, this convention is used. This function therefore allows us to easily search for data in Excel files.
 
-
-NOTE : The code 'signature_thermique.py' is a mathematical model to describe thermal losses occuring for polytech buildings using the well-known formula 'Q = U*A*dT'.
-       It is still being developped.
-
