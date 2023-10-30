@@ -124,7 +124,7 @@ def search_error_and_solve(vecteur):
               else:
                   heure_attendue+=1
             else:
-              print('ERREUR : Ligne', n+1, '| Heure :', heure_attendue)
+              print('ERROR (SOLVED) : Ligne', n+1, '| Heure :', heure_attendue)
               ligne_des_erreurs[indice_tableau] = n+1
               indice_tableau+=1
               
@@ -214,12 +214,14 @@ for i in range(len(compteur_base)) :
     
     # Créez un graphique de la puissance moyenne en fonction de la température
     plt.plot(nombre_heure, puissances_moyennes, color='orangered')
-    plt.title(f"Thermal signature of {building}")
-    plt.ylabel("Mean power per hour(kW) [kW]")
+    plt.title(f"Load profile ({building})")
+    plt.ylabel("Mean power (kW)")
     plt.grid(True, alpha=0.3)
     mois = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
     plt.fill_between(nombre_heure, puissances_moyennes, where=puissances_moyennes>0, alpha=0.7, color='tomato')  
-    plt.xlabel('Heure')
+    
+    jours_an = range(1, 8760)
+    plt.xticks(jours_an[::730][:12], mois, rotation=90)
     #plt.xticks(nombre_heure[::(30*24)][:12], mois, rotation=90) 
     # Spécifiez l'emplacement et le nom du fichier
     #file_path = "C:\\Users\\Romain\\Desktop\\Master 1\\Energy challenge\\Signature_Thermique\\load profile monitoring\\building_a"+building
@@ -230,8 +232,8 @@ for i in range(len(compteur_base)) :
     plt.figure(figsize=(10, 6))
     plt.scatter(temperatures_triees,puissances_triees, alpha=0.5)
     plt.xlabel('Temperature (°C)')
-    plt.ylabel('Mean power per hour(kW)')
-    plt.title(f"Puissance Moyenne par heure en fonction de la Température du {building}")
+    plt.ylabel('Mean power (kW)')
+    plt.title(f"Thermal signature ({building})")
     plt.grid(True)
     # Spécifiez l'emplacement et le nom du fichier
     #file_path = "C:\\Users\\Romain\\Desktop\\Master 1\\Energy challenge\\Signature_Thermique\\load profile monitoring\\building_b"+building
