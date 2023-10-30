@@ -1,5 +1,13 @@
+Welcome to our project. Our group works on the Polytech buildings.
+The code "energy_polytech.py" is the one you're looking for. The only goal of the code is to plot the
+'Thermal Signature' and the "Load Profile' of all buildings of the Polytech zone based on data inside
+excel files provided by University of Liege.
+In those excel files, we have several measurements (measurements every 5 minutes).
+We opted to average all these measurements to have hour-by-hour data.
+At the end, the code provides a 8760x1 table for the temperature (8760 hours = a year) and a 8760x1 table
+for the Powers (in kW). Graphs can thus be plotted thanks to those tables.
 
-
+This is achieved through 4 functions :
 
 
 4 functions : 
@@ -39,4 +47,8 @@ Thanks to this function, a COMPLETE table with 8760 powers can be obtained from 
 defined just above.
 
 
+➤ generate_numbers_as_strings(n) :
+
+This function creates a table going from 1 to n by putting a 0 in front of the figures (01 instead of 1, 02 instead of 2...).
+In the Excel files provided by the university, this convention is used. This function therefore allows us to easily search for data in Excel files.
 
