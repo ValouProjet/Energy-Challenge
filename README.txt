@@ -9,9 +9,6 @@ for the Powers (in kW). Graphs can thus be plotted thanks to those tables.
 
 This is achieved through 4 functions :
 
-
-4 functions : 
-
 ➤ temperature_tri() :
 
 This function allows to fill a table "Temp" which contains all the exterior temperatures on the Sart Tilman campus for
